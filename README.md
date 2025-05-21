@@ -1,9 +1,9 @@
-Coffee Shop Domain Model
+# **Coffee Shop Domain Model**
 
 This is a Python application modeling a Coffee Shop domain using Object-Oriented Programming.
 The domain includes Customer, Coffee, and Order classes with relationships and business logic implemented.
 
-Features
+## Features
 
 * Create Customers and Coffees
 * Customers can place Orders for Coffees with prices in KSH
@@ -11,19 +11,25 @@ Features
 * Calculate average coffee price and find top customer (most aficionado)
 * Interactive terminal-based interface to place orders and query data
 
-Setup
+## Setup
 
 1. Clone or download this repository
 2. (Optional but recommended) Set up a virtual environment:
+   <code>
    python -m venv venv
-   source venv/bin/activate   (On Windows: venv\Scripts\activate)
-3. Install dependencies (if any):
+   source venv/bin/activate   #(On Windows: venv\Scripts\activate)
+   </code>
+4. Install dependencies (if any):
+   <code>
    pip install -r requirements.txt
-   (Currently no external dependencies needed)
+   #(Currently, no external dependencies needed)
+   </code>
 
-Running the Application
+## Running the Application
 Run the interactive Coffee Shop program:
+<code>
 python main.py
+</code>
 You will see a menu with options to:
 
 * Create Customers and Coffees
@@ -32,7 +38,7 @@ You will see a menu with options to:
 * Exit the program
   Follow on-screen prompts to interact with the Coffee Shop.
 
-Project Structure
+## Project Structure
 coffee _shop/
 customer.py          # Customer class
 coffee.py            # Coffee class
@@ -40,16 +46,16 @@ order.py             # Order class
 main.py              # Interactive CLI application
 testing/               # Unit tests
 
-Testing
+## Testing
 If you have tests implemented, run:
+<code>
 pytest
+</code>
 
-Notes
+## Notes
 
-* All prices are handled in Kenyan Shillings (KSH) directly (no conversion).
 * Customer names must be 1–15 characters long.
 * Coffee names must be at least 3 characters long.
 * Order prices must be between 130 and 1300 KSH.
 
-License
-MIT License
+
