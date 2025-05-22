@@ -47,7 +47,7 @@ main.py              # Interactive CLI application
 testing/               # Unit tests
 
 ## Testing
-If you have tests implemented, run:
+run:
 <code>
 pytest
 </code>
