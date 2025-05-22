@@ -1,84 +1,65 @@
 from customer import Customer
 from coffee import Coffee
+from order import Order
 
-def main():
-    customers = []
-    coffees = []
-    print("Welcome to the Coffee Shop CLI!")
+# Session memory
+session_customers = {}         
+customer_visits = {}           
+session_coffees = {}          
 
-    while True:
-        print("\nMenu:")
-        print("1. Add Customer")
-        print("2. Add Coffee")
-        print("3. Place Order")
-        print("4. List Customers")
-        print("5. List Coffees")
-        print("6. Show Coffee Stats")
-        print("7. Exit")
+print("Welcome to the Coffee Shop Terminal")
 
-        choice = input("Choose an option (1-7): ")
+while True:
+    # Get and clean customer name
+    raw_name = input("\nEnter customer name: ")
+    name = raw_name.strip().lower()
 
-        if choice == "1":
-            name = input("Enter customer name (1-15 chars): ")
-            try:
-                customer = Customer(name)
-                customers.append(customer)
-                print(f"Added customer: {customer}")
-            except Exception as e:
-                print(f"Error: {e}")
+    # Handle customer
+    if name in session_customers:
+        customer = session_customers[name]
+        customer_visits[name] += 1
+        print(f"{customer.name} is a repeat customer ({customer_visits[name]} times).")
+    else:
+        customer = Customer(name)
+        session_customers[name] = customer
+        customer_visits[name] = 1
+        print(f"{customer.name} is a new customer - make them feel welcome!")
 
-        elif choice == "2":
-            name = input("Enter coffee name (at least 3 chars): ")
-            try:
-                coffee = Coffee(name)
-                coffees.append(coffee)
-                print(f"Added coffee: {coffee}")
-            except Exception as e:
-                print(f"Error: {e}")
+    # Handle coffee
+    coffee_name = input("Enter coffee name: ").strip()
 
-        elif choice == "3":
-            if not customers or not coffees:
-                print("Add customers and coffees first!")
-                continue
-            print("Customers:")
-            for i, c in enumerate(customers):
-                print(f"{i + 1}. {c.name}")
-            c_index = int(input("Select customer number: ")) - 1
+    if coffee_name in session_coffees:
+        coffee = session_coffees[coffee_name]
+        print(f"{coffee.name} has been ordered {coffee.num_orders()} times.")
+    else:
+        coffee = Coffee(coffee_name)
+        session_coffees[coffee_name] = coffee
+        print(f"{coffee.name} is a new coffee - adding to menu.")
 
-            print("Coffees:")
-            for i, c in enumerate(coffees):
-                print(f"{i + 1}. {c.name}")
-            coffee_index = int(input("Select coffee number: ")) - 1
+    # Get price
+    try:
+        price = float(input("Enter price in KSH: "))
 
-            price = input("Enter price in KSH (130.0 - 1300.0): ")
-            try:
-                price = float(price)
-                order = customers[c_index].create_order(coffees[coffee_index], price)
-                print(f"Order placed: {order}")
-            except Exception as e:
-                print(f"Error: {e}")
+        # Check for discount
+        current_aficionado = Customer.most_aficionado(coffee)
+        if current_aficionado and current_aficionado == customer:
+            print("You're our most aficionado for this coffee! You get a 10% discount.")
+            price *= 0.9
 
-        elif choice == "4":
-            print("Customers:")
-            for customer in customers:
-                print(f"{customer}")
+        # Create order
+        order = Order(customer, coffee, price)
 
-        elif choice == "5":
-            print("Coffees:")
-            for coffee in coffees:
-                print(f"{coffee}")
+        print("\nOrder placed successfully!")
+        print(f"Customer: {customer.name}")
+        print(f"Coffee: {coffee.name}")
+        print(f"Price: KSH {order.price:.2f}")
 
-        elif choice == "6":
-            print("Coffees Stats:")
-            for coffee in coffees:
-                print(f"{coffee}: Orders = {coffee.num_orders()}, Avg Price = {coffee.average_price():.2f} KSH")
+    except ValueError:
+        print("Invalid price. Please enter a number.")
+        continue  # Retry input
 
-        elif choice == "7":
-            print("Goodbye!")
-            break
-
-        else:
-            print("Invalid choice. Please pick a number between 1 and 7.")
-
-if __name__ == "__main__":
-    main()
+    # Ask if barista wants to place another order or end session
+    next_action = input("\nWould you like to place another order? (yes/no): ").strip().lower()
+    if next_action not in ["yes", "y"]:
+        print("Ending session. Have a great day at the Coffee Shop!")
+        break
